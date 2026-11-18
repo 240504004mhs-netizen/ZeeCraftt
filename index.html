@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karya Mahasiswa – Toko Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#0e2624;--deep2:#17413c;--ivory:#f6efe0;--paper:#fffaf0;--gold:#d8b26e;--gold2:#b98d43;--rose:#e3a99c;--mut:#b8c9c3;--ink:#12302c;--line:#e6dcc5}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--deep);color:var(--ivory);overflow-x:hidden;line-height:1.55}
+h1,h2,h3,.serif{font-family:'Cormorant Garamond',serif;font-weight:600;line-height:1.05}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* latar */
+.bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(160deg,#0b1f1d,#14403a 55%,#2a3a36)}
+.bg i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.45;animation:drift 22s ease-in-out infinite alternate}
+.bg .d{position:absolute;color:var(--gold);opacity:.3;animation:flt 14s ease-in-out infinite alternate;will-change:transform}
+.bg .d svg{width:100%;height:100%;display:block;overflow:visible}
+@keyframes flt{from{transform:translateY(0) rotate(var(--r))}to{transform:translateY(-28px) rotate(calc(var(--r) + 8deg))}}
+.bg i:nth-child(1){width:480px;height:480px;background:#2d7a6c;left:-120px;top:-80px}
+.bg i:nth-child(2){width:420px;height:420px;background:#b98d43;right:-100px;top:35%;animation-delay:-8s;opacity:.28}
+.bg i:nth-child(3){width:380px;height:380px;background:#a45d62;left:30%;bottom:-160px;animation-delay:-14s;opacity:.25}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+
+/* header */
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(14,38,36,.72);border-bottom:1px solid rgba(216,178,110,.2)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{font-family:'Cormorant Garamond';font-size:1.7rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.brand span{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;color:var(--gold);font-size:1.1rem}
+nav.links{display:flex;gap:26px;font-size:.92rem;color:var(--mut)}
+nav.links a:hover{color:var(--gold)}
+.cartbtn{position:relative;border:1px solid var(--gold);color:var(--gold);padding:9px 18px;border-radius:99px;font-weight:500;transition:.2s}
+.cartbtn:hover{background:var(--gold);color:var(--deep)}
+.cartbtn b{position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;border-radius:99px;background:var(--rose);color:var(--deep);font-size:.72rem;display:grid;place-items:center}
+@media(max-width:760px){nav.links{display:none}}
+
+/* hero */
+.hero{text-align:center;padding:54px 0 0}
+.hero h1{font-size:clamp(2.6rem,7vw,5rem);font-weight:500;letter-spacing:-.01em}
+.hero h1 em{color:var(--gold)}
+.hero p{max-width:540px;margin:16px auto 0;color:var(--mut)}
+.stage{position:relative;height:430px;perspective:1500px;perspective-origin:50% 35%;cursor:grab;user-select:none;touch-action:pan-y;margin-top:10px;display:flex;justify-content:center}
+.stage.drag{cursor:grabbing}
+.stage::after{content:"";position:absolute;left:50%;bottom:10px;width:min(620px,86%);height:70px;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(216,178,110,.38),transparent 70%);filter:blur(10px);z-index:-1}
+.ring{position:relative;width:var(--w);height:var(--h);margin-top:40px;transform-style:preserve-3d}
+.item{position:absolute;inset:0;transform-style:preserve-3d;cursor:pointer}
+.frame{width:100%;height:100%;border-radius:999px 999px 18px 18px;overflow:hidden;border:2px solid rgba(216,178,110,.75);box-shadow:0 28px 50px -18px rgba(0,0,0,.7);background:var(--deep2)}
+.frame img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.dots{display:flex;gap:8px;justify-content:center;padding:6px 0 0}
+.dots button{width:8px;height:8px;border-radius:50%;background:rgba(246,239,224,.3);transition:.25s}
+.dots button.on{background:var(--gold);width:26px;border-radius:9px}
+.arrows{display:flex;justify-content:center;gap:14px;margin:16px 0 6px}
+.arrow{width:44px;height:44px;border-radius:50%;border:1px solid rgba(216,178,110,.6);color:var(--gold);font-size:1.3rem;transition:.2s}
+.arrow:hover{background:var(--gold);color:var(--deep)}
+
+/* panel detail produk */
+.panel{display:grid;grid-template-columns:1.15fr 1fr;gap:0;margin:30px auto 70px;border-radius:26px;overflow:hidden;background:rgba(255,250,240,.07);backdrop-filter:blur(12px);border:1px solid rgba(216,178,110,.3);transition:opacity .25s,transform .25s}
+.panel.swap{opacity:0;transform:translateY(8px)}
+.pl{padding:34px 36px;position:relative}
+.pnum{position:absolute;right:26px;top:6px;font-family:'Cormorant Garamond';font-size:6rem;color:rgba(216,178,110,.14);line-height:1}
+.tag{display:inline-block;border:1px solid var(--gold);color:var(--gold);border-radius:99px;padding:3px 14px;font-size:.82rem}
+.pl h2{font-size:clamp(2.1rem,4.5vw,3.2rem);margin:14px 0 10px;font-weight:700}
+.pl p{color:var(--mut);max-width:46ch}
+.pr{padding:34px 36px;background:linear-gradient(160deg,rgba(216,178,110,.2),rgba(227,169,156,.12));border-left:1px dashed rgba(216,178,110,.5);display:flex;flex-direction:column;gap:16px;justify-content:center}
+.price{font-family:'Cormorant Garamond';font-size:2.8rem;font-weight:700;color:var(--gold);line-height:1}
+.price small{display:block;font-family:'Jost';font-size:.8rem;color:var(--mut);font-weight:400;margin-bottom:4px}
+.meter{height:8px;border-radius:9px;background:rgba(246,239,224,.14);overflow:hidden}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--rose),var(--gold));border-radius:9px;transition:width .5s}
+.stoktxt{font-size:.88rem;color:var(--mut);margin-top:6px}
+.buy{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.qty{display:flex;align-items:center;border:1px solid rgba(216,178,110,.6);border-radius:99px}
+.qty button{width:36px;height:40px;font-size:1.1rem;color:var(--gold)}
+.qty span{min-width:26px;text-align:center}
+.btn{background:var(--gold);color:var(--deep);font-weight:600;padding:11px 24px;border-radius:99px;transition:.2s}
+.btn:hover{background:#ecc983;transform:translateY(-1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:none;border:1px solid var(--gold);color:var(--gold)}
+.btn.ghost:hover{background:rgba(216,178,110,.15)}
+@media(max-width:820px){.panel{grid-template-columns:1fr}.pr{border-left:0;border-top:1px dashed rgba(216,178,110,.5)}.pl,.pr{padding:26px 22px}.stage{height:380px}}
+
+/* area terang */
+.light{background:rgba(246,239,224,.93);color:var(--ink);border-radius:36px 36px 0 0;padding:70px 0 20px}
+.light h2.title{font-size:clamp(2rem,5vw,3.2rem);text-align:center;font-weight:700}
+.light .sub{text-align:center;color:#5d7a74;max-width:520px;margin:10px auto 34px}
+.tools{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:30px}
+.tools input{border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:10px 18px;font:inherit;min-width:230px}
+.chip{border:1.5px solid var(--line);padding:9px 18px;border-radius:99px;background:var(--paper);transition:.2s}
+.chip.on,.chip:hover{background:var(--ink);color:var(--ivory);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:26px}
+.pc{background:var(--paper);border-radius:20px 20px 20px 20px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;transition:.3s}
+.pc:hover{transform:translateY(-6px);box-shadow:0 24px 40px -22px rgba(18,48,44,.45)}
+.pc .im{aspect-ratio:4/3;overflow:hidden}
+.pc img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.pc:hover img{transform:scale(1.07)}
+.pc .bd{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1;gap:6px}
+.pc .k{font-size:.8rem;color:var(--gold2);font-weight:500}
+.pc h3{font-size:1.45rem}
+.pc p{font-size:.88rem;color:#5d7a74;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pc .ft{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:12px;border-top:1px dashed var(--line)}
+.pc .pp{font-family:'Cormorant Garamond';font-size:1.5rem;font-weight:700;color:var(--ink)}
+.pc .pp small{display:block;font-family:'Jost';font-size:.74rem;color:#8aa09a;font-weight:400}
+.pc .btn{padding:9px 16px;font-size:.88rem;background:var(--ink);color:var(--ivory)}
+.pc .btn:hover{background:var(--deep2)}
+.none{grid-column:1/-1;text-align:center;color:#5d7a74;padding:30px}
+
+section.sec{padding:80px 0 0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;counter-reset:s}
+.step{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:24px 20px;position:relative}
+.step::before{counter-increment:s;content:counter(s);font-family:'Cormorant Garamond';font-size:2.6rem;font-weight:700;color:var(--gold2);display:block;line-height:1;margin-bottom:8px}
+.step h3{font-size:1.3rem;margin-bottom:6px}
+.step p{font-size:.88rem;color:#5d7a74}
+.about{display:grid;grid-template-columns:1.2fr 1fr;gap:34px;align-items:center}
+.about p{color:#43625c;margin-top:12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stats div{background:var(--ink);color:var(--ivory);border-radius:20px;padding:22px;text-align:center}
+.stats b{display:block;font-family:'Cormorant Garamond';font-size:2.8rem;color:var(--gold);line-height:1}
+@media(max-width:760px){.about{grid-template-columns:1fr}}
+details{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-bottom:12px}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--gold2);font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin-top:10px;color:#5d7a74;font-size:.94rem}
+.contact{margin-top:80px;background:var(--ink);color:var(--ivory);border-radius:30px;padding:46px 28px;text-align:center}
+.contact h2{font-size:clamp(1.9rem,4vw,2.8rem)}
+.contact p{color:var(--mut);margin:10px auto 22px;max-width:480px}
+.soc{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+footer{background:rgba(246,239,224,.93);color:#5d7a74;text-align:center;font-size:.82rem;padding:34px 20px 40px}
+footer b{color:var(--gold2)}
+
+/* drawer */
+#ov{position:fixed;inset:0;z-index:40;background:rgba(7,20,18,.65);display:none;justify-content:flex-end}
+#ov.open{display:flex}
+.dr{background:var(--paper);color:var(--ink);width:100%;max-width:460px;height:100%;overflow-y:auto;padding:24px;animation:sl .28s ease-out}
+@keyframes sl{from{transform:translateX(40px);opacity:0}}
+.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.dh h3{font-size:1.8rem}
+.dh button{font-size:1.8rem;color:#8aa09a}
+.ci{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
+.ci img{width:54px;height:54px;border-radius:12px;object-fit:cover}
+.ci div.i{flex:1;font-size:.9rem}
+.ci small{color:#6f8a84}
+.mini{display:flex;align-items:center;gap:8px;margin-top:4px}
+.mini button{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:#fff}
+.rm{color:#b2453b;font-size:.8rem}
+.empty{text-align:center;color:#6f8a84;padding:30px 0}
+form label{display:block;font-size:.8rem;font-weight:600;margin:12px 0 4px}
+form input,form textarea,form select{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font:inherit;font-size:.92rem;color:var(--ink)}
+form input:focus,form textarea:focus,form select:focus{outline:2px solid var(--gold);border-color:transparent}
+.sum{margin:16px 0 4px;font-size:.92rem}
+.sum div{display:flex;justify-content:space-between;padding:3px 0}
+.sum .t{font-weight:600;font-size:1.15rem;border-top:1px solid var(--line);margin-top:6px;padding-top:10px}
+.sum .t span:last-child{font-family:'Cormorant Garamond';font-size:1.7rem;color:var(--gold2)}
+.full{width:100%;margin-top:12px;background:var(--ink);color:var(--ivory)}
+.full:hover{background:var(--deep2)}
+.track{display:flex;justify-content:space-between;margin:18px 0 22px;position:relative}
+.track::before{content:"";position:absolute;left:8%;right:8%;top:11px;border-top:2px dashed var(--line)}
+.track div{position:relative;text-align:center;font-size:.68rem;width:20%;color:#8aa09a}
+.track div i{display:block;width:22px;height:22px;border-radius:50%;background:var(--line);margin:0 auto 5px;font-style:normal;line-height:22px;font-size:.7rem}
+.track div.ok{color:var(--ink)}
+.track div.ok i{background:var(--gold);color:var(--deep)}
+.bank{background:var(--ink);color:var(--ivory);border-radius:18px;padding:18px;margin:14px 0}
+.bank .nm{font-family:'Cormorant Garamond';font-size:2rem;letter-spacing:.04em;color:var(--gold)}
+.bank .row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.88rem;margin-top:6px;color:var(--mut)}
+.bank button{border:1px solid var(--gold);color:var(--gold);border-radius:99px;padding:3px 12px;font-size:.78rem}
+.note{font-size:.84rem;color:#5d7a74;margin:10px 0}
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);background:var(--gold);color:var(--deep);padding:11px 22px;border-radius:99px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:60}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+
+<header><div class="wrap nav">
+  <a class="brand" href="#atas"><span>K</span>Karya Mahasiswa</a>
+  <nav class="links"><a href="#koleksi">Koleksi</a><a href="#cara">Cara pesan</a><a href="#tentang">Tentang kami</a><a href="#faq">Tanya jawab</a></nav>
+  <button class="cartbtn" onclick="openCart()" aria-label="Buka keranjang">Keranjang <b id="cc">0</b></button>
+</div></header>
+
+<main id="atas">
+<section class="hero wrap">
+  <h1>Karya muda yang<br><em>layak kamu miliki</em></h1>
+  <p>Gelang dan bag charm buatan tangan mahasiswa, dibuat dengan hati. Putar atau geser untuk melihat semuanya, lalu pesan langsung lewat WhatsApp.</p>
+</section>
+
+<div class="stage" id="stage" aria-label="Karosel foto produk"><div class="ring" id="ring"></div></div>
+<div class="arrows"><button class="arrow" id="prev" aria-label="Sebelumnya">‹</button><button class="arrow" id="next" aria-label="Berikutnya">›</button></div>
+<div class="dots" id="dots"></div>
+
+<div class="wrap"><article class="panel" id="panel" aria-live="polite"></article></div>
+
+<div class="light">
+  <div class="wrap">
+    <section id="koleksi">
+      <h2 class="title serif">Seluruh koleksi kami</h2>
+      <p class="sub">Cari produk favoritmu atau pilih kategori untuk mempersempit pilihan.</p>
+      <div class="tools"><input id="q" type="search" placeholder="Cari nama produk…" aria-label="Cari produk"><div id="chips" class="tools" style="margin:0"></div></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section class="sec" id="cara">
+      <h2 class="title serif">Cara memesan</h2>
+      <p class="sub">Lima langkah sederhana, dari memilih produk sampai barang di tanganmu.</p>
+      <div class="steps">
+        <div class="step"><h3>Pilih produk</h3><p>Masukkan produk yang kamu suka ke keranjang.</p></div>
+        <div class="step"><h3>Isi data pengiriman</h3><p>Lengkapi nama, WhatsApp, alamat, dan pilih tujuan pengiriman.</p></div>
+        <div class="step"><h3>Kirim pesanan</h3><p>Pesananmu otomatis terkirim ke admin lewat WhatsApp untuk divalidasi.</p></div>
+        <div class="step"><h3>Bayar lewat DANA</h3><p>Kirim sesuai total yang tertera ke nomor DANA toko, lalu kirim bukti pembayaran ke admin.</p></div>
+        <div class="step"><h3>Barang dikirim</h3><p>Setelah pembayaran dikonfirmasi, pesanan dikemas dan dikirim ke alamatmu.</p></div>
+      </div>
+    </section>
+
+    <section class="sec" id="tentang">
+      <div class="about">
+        <div><h2 class="title serif" style="text-align:left">Dari kampus, untuk kamu</h2>
+        <p>Karya Mahasiswa adalah toko online milik para wirausaha muda. Setiap gelang dan bag charm dirangkai sendiri dengan perhatian pada detail, harga yang jujur, dan layanan yang ramah.</p>
+        <p>Dengan berbelanja di sini, kamu ikut mendukung kreativitas dan semangat usaha mahasiswa.</p></div>
+        <div class="stats"><div><b id="s1">0</b>produk</div><div><b id="s2">0</b>kategori</div><div><b id="s3">0</b>stok tersedia</div><div><b>24 jam</b>admin merespons</div></div>
+      </div>
+    </section>
+
+    <section class="sec" id="faq">
+      <h2 class="title serif">Pertanyaan yang sering diajukan</h2>
+      <p class="sub">Belum menemukan jawabannya? Hubungi kami lewat WhatsApp.</p>
+      <div style="max-width:720px;margin:0 auto">
+        <details><summary>Bagaimana cara membayar?</summary><p>Setelah pesanan dikirim, nomor DANA dan total pembayaran ditampilkan di layar. Kirim sesuai total lewat DANA, lalu kirim bukti pembayaran lewat tombol WhatsApp yang tersedia.</p></details>
+        <details><summary>Kapan pesanan saya dikirim?</summary><p>Pesanan diproses setelah admin mengonfirmasi pembayaran. Admin akan mengabarimu lewat WhatsApp saat barang dikirim.</p></details>
+        <details><summary>Bagaimana ongkos kirim dihitung?</summary><p>Ongkos kirim mengikuti tujuan yang kamu pilih saat mengisi data pengiriman, dan sudah termasuk dalam total pembayaran.</p></details>
+        <details><summary>Bagaimana jika barang tidak sesuai?</summary><p>Hubungi admin lewat WhatsApp maksimal 1×24 jam setelah barang diterima, sertakan foto barang agar kami bisa membantu.</p></details>
+      </div>
+    </section>
+
+    <section class="contact">
+      <h2 class="serif">Ada pertanyaan sebelum memesan?</h2>
+      <p>Kami siap membantu memilih produk, menanyakan stok, atau mengatur pengiriman.</p>
+      <div class="soc" id="soc"></div>
+    </section>
+  </div>
+  <footer><p>© 2026 Karya Mahasiswa. Seluruh hak cipta dilindungi.</p><p style="margin-top:4px">Powered by <b>wahyuramadhan.com</b></p></footer>
+</div>
+</main>
+
+<!-- Keranjang & pembayaran -->
+<div id="ov" onclick="if(event.target===this)closeCart()"><div class="dr" id="dr"></div></div>
+<div id="toast" role="status"></div>
+
+<script>
+/* ============ PENGATURAN: ubah bagian ini ============ */
+const API_URL  = "https://script.google.com/macros/s/AKfycbxqawMUw-3FqIfk0iQvgZ3_YtKq9PmdlarcrvM5mpGV_bKJLUy1uZMTB4oAeWAbnqxM/exec";
+const WA_ADMIN = "6287815503585";                 // format 628xxxxxxxxxx
+const REKENING = {bank:"DANA", nomor:"087815503585", nama:"ZEHAN ASKIA RAHMADANI"}; // pembayaran lewat DANA
+const SOSMED   = {ig:"ZeeCraft", tiktok:"ZeeCraft"};
+const ZONA     = [{nama:"Dalam kota", biaya:10000},{nama:"Luar kota (satu provinsi)", biaya:25000},{nama:"Luar provinsi", biaya:45000}];
+const KECEPATAN = 0.11;
+/* ===================================================== */
+
+const DEMO=[
+ {id:1,nama:"Gelang Manik Mutiara",kategori:"Gelang",deskripsi:"Gelang manik mutiara sintetis dengan tali elastis yang nyaman. Cocok untuk harian maupun acara.",harga:35000,stok:20},
+ {id:2,nama:"Gelang Charm Bunga",kategori:"Gelang",deskripsi:"Gelang rantai dengan charm bunga mungil berwarna pastel, ukuran bisa disesuaikan.",harga:42000,stok:18},
+ {id:3,nama:"Gelang Macrame",kategori:"Gelang",deskripsi:"Gelang tali rajut buatan tangan dengan simpul rapi dan pilihan warna lembut.",harga:30000,stok:25},
+ {id:4,nama:"Bag Charm Beruang Pita",kategori:"Bag Charm",deskripsi:"Gantungan tas boneka beruang dengan pita satin dan rantai emas, manis dan ringan.",harga:48000,stok:15},
+ {id:5,nama:"Bag Charm Manik Cherry",kategori:"Bag Charm",deskripsi:"Untaian manik dengan charm cherry merah, dilengkapi kait yang kuat dan mudah dipasang.",harga:38000,stok:22},
+ {id:6,nama:"Bag Charm Mutiara Hati",kategori:"Bag Charm",deskripsi:"Bag charm mutiara berbandul hati berkilau, mempercantik tas dan kunci kesayanganmu.",harga:45000,stok:12}
+];
+const EMO={Gelang:"📿","Bag Charm":"🧸"};
+const WARNA=[["#d8b26e","#8a5a2b"],["#e3a99c","#7a3f48"],["#8fc7b8","#1f5a52"],["#cdb4e6","#59407a"],["#f0d6a0","#9a6a2a"],["#9ec3d9","#2c566e"]];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rp=n=>"Rp "+Number(n||0).toLocaleString("id-ID");
+let products=[],cart=[],cur=0,pq=1,filt="Semua",lastOrder=null;
+
+function ph(p,i){const[c1,c2]=WARNA[i%WARNA.length],e=EMO[p.kategori]||"🛍️";
+ return "data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='500' height='640'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${c1}'/><stop offset='1' stop-color='${c2}'/></linearGradient></defs><rect width='500' height='640' fill='url(#g)'/><circle cx='400' cy='110' r='170' fill='rgba(255,255,255,.18)'/><circle cx='80' cy='560' r='120' fill='rgba(255,255,255,.12)'/><text x='50%' y='56%' font-size='170' text-anchor='middle'>${e}</text></svg>`)}
+const img=(p,i)=>p.foto||ph(p,i);
+const fix=(e,p,i)=>{e.onerror=null;e.src=ph(p,i)};
+
+async function load(){
+ try{ if(API_URL.startsWith("MASUKKAN"))throw 0; const r=await fetch(API_URL); products=(await r.json()).data||[]; if(!products.length)throw 0 }
+ catch(e){products=DEMO}
+ products.forEach(p=>{p.harga=+p.harga||0;p.stok=+p.stok||0});
+ build();renderPanel();renderChips();renderGrid();stats();social();updateCart();
+}
+
+/* ---------- Karosel 3D (hanya foto) ---------- */
+const stage=$("stage"),ring=$("ring");
+let items=[],angle=0,step=60,radius=300,paused=false,drag=false,sx=0,sa=0,vel=0,snap=null,moved=0;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function build(){
+ const w=innerWidth<600?210:250,h=innerWidth<600?290:340,n=products.length;
+ ring.style.setProperty("--w",w+"px");ring.style.setProperty("--h",h+"px");
+ step=360/n;radius=n<3?260:Math.max(250,Math.round(w/2/Math.tan(Math.PI/n))+36);
+ ring.innerHTML="";
+ items=products.map((p,i)=>{
+  const el=document.createElement("div");el.className="item";
+  el.style.transform=`rotateY(${i*step}deg) translateZ(${radius}px)`;
+  el.innerHTML=`<div class="frame"><img src="${esc(img(p,i))}" alt="${esc(p.nama)}" draggable="false"></div>`;
+  el.querySelector("img").onerror=e=>fix(e.target,p,i);
+  el.onclick=()=>{if(moved>6)return;goTo(i)};
+  ring.appendChild(el);return el});
+ $("dots").innerHTML=products.map((p,i)=>`<button aria-label="${esc(p.nama)}" onclick="goTo(${i})"></button>`).join("");
+}
+function goTo(i){const m=Math.round((angle+i*step)/360);snap=-i*step+360*m}
+function front(){const n=products.length;return((Math.round(-angle/step)%n)+n)%n}
+function frame(){
+ if(snap!==null){const d=snap-angle;angle+=d*.12;if(Math.abs(d)<.05){angle=snap;snap=null}}
+ else if(!drag){ if(Math.abs(vel)>.02){angle+=vel;vel*=.94} else if(!paused&&!reduce)angle-=KECEPATAN }
+ ring.style.transform=`translateZ(${-radius}px) rotateY(${angle}deg)`;
+ items.forEach((el,i)=>{const a=(((i*step+angle)%360)+360)%360,d=(1+Math.cos(a*Math.PI/180))/2;el.style.opacity=(.22+.78*d).toFixed(2)});
+ const f=front();if(f!==cur){cur=f;pq=1;swap()}
+ requestAnimationFrame(frame);
+}
+stage.addEventListener("pointerdown",e=>{drag=true;vel=0;snap=null;sx=e.clientX;sa=angle;moved=0;stage.classList.add("drag");stage.setPointerCapture(e.pointerId)});
+stage.addEventListener("pointermove",e=>{if(!drag)return;moved=Math.max(moved,Math.abs(e.clientX-sx));const n=sa+(e.clientX-sx)*.35;vel=(n-angle)*.6;angle=n});
+["pointerup","pointercancel"].forEach(t=>stage.addEventListener(t,()=>{drag=false;stage.classList.remove("drag")}));
+stage.addEventListener("mouseenter",()=>paused=true);stage.addEventListener("mouseleave",()=>paused=false);
+const nudge=d=>{const b=snap!==null?snap:angle;snap=Math.round(b/step)*step+d*step};
+$("prev").onclick=()=>nudge(1);$("next").onclick=()=>nudge(-1);
+addEventListener("keydown",e=>{if(e.key==="Escape")closeCart()});
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>products.length&&build(),200)});
+
+/* ---------- Panel detail produk ---------- */
+function swap(){const el=$("panel");el.classList.add("swap");setTimeout(()=>{renderPanel();el.classList.remove("swap")},180)}
+function renderPanel(){
+ const p=products[cur];if(!p)return;const n=products.length,mx=Math.max(...products.map(x=>x.stok),1);
+ [...$("dots").children].forEach((d,i)=>d.classList.toggle("on",i===cur));
+ $("panel").innerHTML=`
+ <div class="pl"><div class="pnum">${String(cur+1).padStart(2,"0")}</div>
+  <span class="tag">${esc(p.kategori||"Umum")}</span><h2>${esc(p.nama)}</h2><p>${esc(p.deskripsi)}</p></div>
+ <div class="pr">
+  <div class="price"><small>Harga satuan</small>${rp(p.harga)}</div>
+  <div><div class="meter"><i style="width:${Math.max(4,p.stok/mx*100)}%"></i></div>
+   <div class="stoktxt">${p.stok>0?(p.stok<=5?"Hampir habis, tersisa "+p.stok:"Tersedia "+p.stok+" pcs"):"Stok sedang habis"}</div></div>
+  <div class="buy"><div class="qty"><button onclick="pqty(-1)" aria-label="Kurangi">−</button><span id="pq">${pq}</span><button onclick="pqty(1)" aria-label="Tambah">+</button></div>
+   <button class="btn" ${p.stok<1?"disabled":""} onclick="addCart('${esc(p.id)}',pq)">Masukkan ke keranjang</button></div>
+ </div>`;
+}
+function pqty(d){const p=products[cur];pq=Math.min(Math.max(1,pq+d),Math.max(1,p.stok));$("pq").textContent=pq}
+
+/* ---------- Katalog ---------- */
+function renderChips(){const ks=["Semua",...new Set(products.map(p=>p.kategori||"Umum"))];
+ $("chips").innerHTML=ks.map(k=>`<button class="chip ${k===filt?"on":""}" onclick="filt='${esc(k)}';renderChips();renderGrid()">${esc(k)}</button>`).join("")}
+function renderGrid(){
+ const q=$("q").value.toLowerCase();
+ const list=products.map((p,i)=>({p,i})).filter(({p})=>(filt==="Semua"||(p.kategori||"Umum")===filt)&&p.nama.toLowerCase().includes(q));
+ $("grid").innerHTML=list.length?list.map(({p,i})=>`
+  <article class="pc"><div class="im"><img src="${esc(img(p,i))}" alt="${esc(p.nama)}" loading="lazy" onerror="fix(this,products[${i}],${i})"></div>
+  <div class="bd"><span class="k">${esc(p.kategori||"Umum")}</span><h3>${esc(p.nama)}</h3><p>${esc(p.deskripsi)}</p>
+  <div class="ft"><div class="pp"><small>Stok ${p.stok}</small>${rp(p.harga)}</div>
+  <button class="btn" ${p.stok<1?"disabled":""} onclick="addCart('${esc(p.id)}',1)">${p.stok<1?"Habis":"+ Keranjang"}</button></div></div></article>`).join(""):`<p class="none">Produk tidak ditemukan. Coba kata kunci atau kategori lain.</p>`}
+$("q").addEventListener("input",renderGrid);
+function stats(){$("s1").textContent=products.length;$("s2").textContent=new Set(products.map(p=>p.kategori)).size;$("s3").textContent=products.reduce((a,p)=>a+p.stok,0)}
+function social(){const wa=`https://wa.me/${WA_ADMIN}?text=${encodeURIComponent("Halo Admin, saya ingin bertanya tentang produk.")}`;
+ $("soc").innerHTML=`<a class="btn" href="${wa}" target="_blank" rel="noopener">Chat WhatsApp</a>
+ <a class="btn ghost" href="https://instagram.com/${SOSMED.ig}" target="_blank" rel="noopener">Instagram</a>
+ <a class="btn ghost" href="https://tiktok.com/@${SOSMED.tiktok}" target="_blank" rel="noopener">TikTok</a>`}
+
+/* ---------- Keranjang ---------- */
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("show"),2000)}
+function addCart(id,q){
+ const p=products.find(x=>String(x.id)===String(id));if(!p)return;
+ const ex=cart.find(i=>String(i.id)===String(id)),have=ex?ex.qty:0;
+ if(have+q>p.stok)return toast("Stok "+p.nama+" hanya "+p.stok);
+ ex?ex.qty+=q:cart.push({...p,qty:q,_i:products.indexOf(p)});
+ updateCart();toast(p.nama+" masuk keranjang");
+}
+function chg(i,d){const it=cart[i],p=products[it._i];const n=it.qty+d;if(n<1)return rmv(i);if(n>p.stok)return toast("Stok tidak cukup");it.qty=n;updateCart();if(!lastOrder)cartView()}
+function rmv(i){cart.splice(i,1);updateCart();cartView()}
+const sub=()=>cart.reduce((a,i)=>a+i.harga*i.qty,0);
+function updateCart(){$("cc").textContent=cart.reduce((a,i)=>a+i.qty,0)}
+function openCart(){$("ov").classList.add("open");lastOrder?payView():cartView()}
+function closeCart(){$("ov").classList.remove("open");if(lastOrder){lastOrder=null}}
+function sumHtml(){const z=ZONA[$("zona")?+$("zona").value:0];return `<div class="sum"><div><span>Subtotal</span><span>${rp(sub())}</span></div><div><span>Ongkos kirim</span><span id="ongk">${rp(z.biaya)}</span></div><div class="t"><span>Total</span><span id="tot">${rp(sub()+z.biaya)}</span></div></div>`}
+function cartView(){
+ const keep=["cust-name","cust-phone","cust-address","cust-note","zona"].reduce((o,k)=>(o[k]=$(k)?$(k).value:"",o),{});
+ $("dr").innerHTML=`<div class="dh"><h3>Keranjang belanja</h3><button onclick="closeCart()" aria-label="Tutup">&times;</button></div>
+ ${cart.length?cart.map((it,i)=>`<div class="ci"><img src="${esc(img(it,it._i))}" alt="" onerror="fix(this,products[${it._i}],${it._i})"><div class="i"><b>${esc(it.nama)}</b><br><small>${rp(it.harga)}</small>
+  <div class="mini"><button onclick="chg(${i},-1)" aria-label="Kurangi">−</button>${it.qty}<button onclick="chg(${i},1)" aria-label="Tambah">+</button></div></div>
+  <button class="rm" onclick="rmv(${i})">Hapus</button></div>`).join(""):`<p class="empty">Keranjangmu masih kosong.<br>Pilih produk yang kamu suka dulu, ya.</p>`}
+ ${cart.length?`<form onsubmit="checkout(event)">
+  <label for="cust-name">Nama lengkap</label><input id="cust-name" required placeholder="Contoh: Budi Santoso">
+  <label for="cust-phone">Nomor WhatsApp aktif</label><input id="cust-phone" type="tel" required pattern="[0-9+ ]{9,16}" placeholder="081234567890">
+  <label for="cust-address">Alamat lengkap</label><textarea id="cust-address" rows="2" required placeholder="Jalan, nomor rumah, kelurahan, kecamatan, kota"></textarea>
+  <label for="zona">Tujuan pengiriman</label><select id="zona" onchange="calc()">${ZONA.map((z,i)=>`<option value="${i}">${esc(z.nama)} (${rp(z.biaya)})</option>`).join("")}</select>
+  <label for="cust-note">Catatan untuk penjual (opsional)</label><input id="cust-note" placeholder="Contoh: warna, ukuran, atau jam kirim">
+  <div id="sumbox">${sumHtml()}</div>
+  <p class="note">Pesananmu akan terkirim ke admin lewat WhatsApp. Setelah itu kamu akan melihat nomor DANA untuk pembayaran.</p>
+  <button class="btn full" id="btn">Pesan sekarang</button></form>`:""}`;
+ Object.entries(keep).forEach(([k,v])=>{if(v&&$(k))$(k).value=v});calc();
+}
+function calc(){if($("sumbox"))$("sumbox").innerHTML=sumHtml()}
+
+function checkout(e){
+ e.preventDefault();if(!cart.length)return;
+ const z=ZONA[+$("zona").value],inv="INV-"+Date.now().toString().slice(-6);
+ const o={invoice:inv,nama:$("cust-name").value.trim(),whatsapp:$("cust-phone").value.trim(),alamat:$("cust-address").value.trim(),catatan:$("cust-note").value.trim(),
+  tujuan:z.nama,ongkir:z.biaya,items:cart.map(i=>({id:i.id,nama:i.nama,harga:i.harga,qty:i.qty})),subtotal:sub(),total:sub()+z.biaya};
+ if(!API_URL.startsWith("MASUKKAN"))fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(o)}).catch(()=>{});
+ let t=`Halo Admin, saya ingin memesan dan meminta validasi pesanan:\n\n🧾 *Invoice:* ${inv}\n👤 *Nama:* ${o.nama}\n📱 *No. WA:* ${o.whatsapp}\n📍 *Alamat:* ${o.alamat}\n🚚 *Tujuan:* ${o.tujuan}\n`;
+ if(o.catatan)t+=`📝 *Catatan:* ${o.catatan}\n`;
+ t+=`\n🛍️ *Pesanan:*\n`+o.items.map(i=>`• ${i.nama} (${i.qty}x) = ${rp(i.harga*i.qty)}`).join("\n");
+ t+=`\n\nSubtotal: ${rp(o.subtotal)}\nOngkir: ${rp(o.ongkir)}\n💰 *Total: ${rp(o.total)}*\n\nSaya akan membayar lewat ${REKENING.bank} ke nomor ${REKENING.nomor} a.n. ${REKENING.nama} dan mengirim bukti pembayaran di chat ini. Mohon konfirmasi ketersediaan barang. Terima kasih!`;
+ window.open(`https://wa.me/${WA_ADMIN}?text=${encodeURIComponent(t)}`,"_blank");
+ lastOrder=o;cart=[];updateCart();payView();
+}
+
+function payView(){
+ const o=lastOrder;
+ $("dr").innerHTML=`<div class="dh"><h3>Pesanan tercatat</h3><button onclick="closeCart()" aria-label="Tutup">&times;</button></div>
+ <p>Terima kasih, <b>${esc(o.nama)}</b>. Nomor pesananmu <b>${o.invoice}</b>.</p>
+ <div class="track"><div class="ok"><i>✓</i>Pesanan dibuat</div><div class="ok"><i>2</i>Menunggu pembayaran</div><div><i>3</i>Pembayaran dikonfirmasi</div><div><i>4</i>Dikirim</div><div><i>5</i>Diterima</div></div>
+ <div class="bank"><div style="font-size:.85rem;color:var(--mut)">Kirim lewat DANA tepat sejumlah</div>
+  <div class="nm">${rp(o.total)}</div>
+  <div class="row"><span>${esc(REKENING.bank)} · ${esc(REKENING.nomor)}</span><button onclick="copyT('${esc(REKENING.nomor)}')">Salin no. DANA</button></div>
+  <div class="row"><span>a.n. ${esc(REKENING.nama)}</span><button onclick="copyT('${o.total}')">Salin total</button></div></div>
+ <div class="sum">${o.items.map(i=>`<div><span>${esc(i.nama)} ×${i.qty}</span><span>${rp(i.harga*i.qty)}</span></div>`).join("")}
+  <div><span>Ongkir (${esc(o.tujuan)})</span><span>${rp(o.ongkir)}</span></div></div>
+ <p class="note">Setelah membayar, kirim bukti pembayaran ke admin. Pesananmu dikemas dan dikirim begitu pembayaran dikonfirmasi.</p>
+ <button class="btn full" onclick="sendProof()">Kirim bukti pembayaran via WhatsApp</button>
+ <button class="btn ghost full" style="color:var(--ink);border-color:var(--ink)" onclick="closeCart()">Kembali berbelanja</button>`;
+}
+function sendProof(){const o=lastOrder;const t=`Halo Admin, saya sudah membayar lewat DANA untuk pesanan *${o.invoice}* atas nama ${o.nama} sebesar *${rp(o.total)}* ke ${REKENING.bank} ${REKENING.nomor}.\n\nBukti pembayaran saya lampirkan di chat ini. Mohon dikonfirmasi dan diproses pengirimannya. Terima kasih!`;
+ window.open(`https://wa.me/${WA_ADMIN}?text=${encodeURIComponent(t)}`,"_blank")}
+function copyT(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast("Tersalin"),()=>toast("Salin manual: "+t))}
+
+/* ---------- Latar: gelang & bag charm ---------- */
+function braceletSVG(cols){let o='<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".6"/>';
+ for(let i=0;i<18;i++){const a=i/18*Math.PI*2,x=50+38*Math.cos(a),y=50+38*Math.sin(a),big=i%6===0;
+  o+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${big?6.5:4.6}" fill="${cols[i%cols.length]}" stroke="rgba(255,255,255,.55)" stroke-width=".8"/>`}
+ return o+'<path d="M50 4c4 0 6 3 6 6s-3 5-6 5-6-2-6-5 2-6 6-6z" fill="currentColor" opacity=".9"/></svg>'}
+function charmSVG(c){return `<svg viewBox="0 0 60 150"><circle cx="30" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><rect x="22" y="17" width="16" height="12" rx="6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M30 29v16" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/>
+ <circle cx="30" cy="52" r="7" fill="${c[0]}" stroke="rgba(255,255,255,.6)"/><circle cx="30" cy="68" r="5.5" fill="${c[1]}" stroke="rgba(255,255,255,.6)"/><circle cx="30" cy="82" r="7" fill="${c[2]}" stroke="rgba(255,255,255,.6)"/>
+ <path d="M30 108c-14-9-22-17-22-27 0-8 6-13 12-13 4 0 8 2 10 6 2-4 6-6 10-6 6 0 12 5 12 13 0 10-8 18-22 27z" transform="translate(0,6) scale(.9) translate(3,6)" fill="${c[0]}" stroke="rgba(255,255,255,.6)"/></svg>`}
+(function(){
+ const C=["#d8b26e","#e3a99c","#8fc7b8","#f6efe0","#cdb4e6"];
+ const spec=[["b",150,"4%","6%",-12,0],["c",70,"88%","4%",10,3],["b",110,"78%","30%",20,6],["c",56,"6%","34%",-14,2],["b",170,"-3%","62%",8,5],["c",78,"90%","58%",-8,1],["b",120,"46%","76%",-20,7],["c",50,"30%","12%",14,4],["b",90,"62%","8%",30,2],["c",62,"68%","86%",12,6]];
+ const bg=document.querySelector(".bg");
+ spec.forEach(([t,w,l,tp,r,dl],i)=>{const d=document.createElement("div");d.className="d";
+  d.style.cssText=`width:${w}px;height:${t==="b"?w:w*2.5}px;left:${l};top:${tp};--r:${r}deg;animation-delay:-${dl*2}s;animation-duration:${12+i}s`;
+  d.innerHTML=t==="b"?braceletSVG([C[i%5],C[(i+1)%5],C[(i+2)%5]]):charmSVG([C[i%5],C[(i+2)%5],C[(i+3)%5]]);
+  bg.appendChild(d)});
+})();
+
+load();requestAnimationFrame(frame);
+</script>
+</body>
+</html>
